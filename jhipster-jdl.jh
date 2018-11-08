@@ -1,0 +1,71 @@
+
+
+entity Client {
+    username String required maxlength(100),
+    givenName String required maxlength(100),
+    lastName String required maxlength(100),
+    password String required maxlength(100),
+    email String required maxlength(100),
+}
+
+entity Role {
+    name String required maxlength(100)
+}
+
+entity RegistrationCategory {
+    name String required maxlength(100)
+}
+
+entity UserEventRegistration {
+    timestamp Instant required,
+}
+
+entity Category {
+    name String required maxlength(100)
+}
+
+entity Event {
+    name String required maxlength(100),
+    description TextBlob required,
+    locationLongitude Double required,
+    locationLatitude Double required,
+    price Float,
+    timestamp Instant required,
+    eventStart Instant required,
+    eventEnd Instant required,
+    eventImage ImageBlob
+}
+
+entity Impression {
+    image ImageBlob required,
+}
+
+relationship OneToMany {
+	Impression{eventId} to Event
+}
+
+relationship OneToMany {
+	Category{id} to Event
+}
+
+relationship OneToMany {
+	Role{clientId} to Client{roleId}
+}
+
+relationship OneToMany {
+	Event{userEventRegistrationId} to UserEventRegistration
+}
+
+relationship OneToMany {
+	User{id} to UserEventRegistration
+}
+
+relationship OneToMany {
+	RegistrationCategory{userEventRegistrationId} to UserEventRegistration
+}
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set pagination options
+//paginate User, Role, RegistrationCategory, UserEventRegistration, Category, Event with infinite-scroll
