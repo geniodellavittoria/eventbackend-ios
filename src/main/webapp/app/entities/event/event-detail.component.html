@@ -1,0 +1,76 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="event">
+            <h2><span>Event</span> {{event.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{event.name}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{event.description}}</span>
+                </dd>
+                <dt><span>Location Longitude</span></dt>
+                <dd>
+                    <span>{{event.locationLongitude}}</span>
+                </dd>
+                <dt><span>Location Latitude</span></dt>
+                <dd>
+                    <span>{{event.locationLatitude}}</span>
+                </dd>
+                <dt><span>Price</span></dt>
+                <dd>
+                    <span>{{event.price}}</span>
+                </dd>
+                <dt><span>Timestamp</span></dt>
+                <dd>
+                    <span>{{event.timestamp}}</span>
+                </dd>
+                <dt><span>Event Start</span></dt>
+                <dd>
+                    <span>{{event.eventStart}}</span>
+                </dd>
+                <dt><span>Event End</span></dt>
+                <dd>
+                    <span>{{event.eventEnd}}</span>
+                </dd>
+                <dt><span>Event Image</span></dt>
+                <dd>
+                    <div *ngIf="event.eventImage">
+                        <a (click)="openFile(event.eventImageContentType, event.eventImage)">
+                            <img [src]="'data:' + event.eventImageContentType + ';base64,' + event.eventImage" style="max-width: 100%;" alt="event image"/>
+                        </a>
+                        {{event.eventImageContentType}}, {{byteSize(event.eventImage)}}
+                    </div>
+                </dd>
+                <dt><span>Category</span></dt>
+                <dd>
+                    <div *ngIf="event.category">
+                        <a [routerLink]="['/category', event.category?.id, 'view']">{{event.category?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>Impression</span></dt>
+                <dd>
+                    <div *ngIf="event.impression">
+                        <a [routerLink]="['/impression', event.impression?.id, 'view']">{{event.impression?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/event', event.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

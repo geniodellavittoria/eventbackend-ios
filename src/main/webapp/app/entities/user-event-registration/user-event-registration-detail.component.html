@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="userEventRegistration">
+            <h2><span>User Event Registration</span> {{userEventRegistration.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Timestamp</span></dt>
+                <dd>
+                    <span>{{userEventRegistration.timestamp}}</span>
+                </dd>
+                <dt><span>Registration Category</span></dt>
+                <dd>
+                    <div *ngIf="userEventRegistration.registrationCategory">
+                        <a [routerLink]="['/registration-category', userEventRegistration.registrationCategory?.id, 'view']">{{userEventRegistration.registrationCategory?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span>User Id</span></dt>
+                <dd>
+                    {{userEventRegistration.userId?.id}}
+                </dd>
+                <dt><span>Event</span></dt>
+                <dd>
+                    <div *ngIf="userEventRegistration.event">
+                        <a [routerLink]="['/event', userEventRegistration.event?.id, 'view']">{{userEventRegistration.event?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/user-event-registration', userEventRegistration.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

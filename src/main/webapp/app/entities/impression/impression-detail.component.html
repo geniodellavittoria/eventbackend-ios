@@ -1,0 +1,32 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="impression">
+            <h2><span>Impression</span> {{impression.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Image</span></dt>
+                <dd>
+                    <div *ngIf="impression.image">
+                        <a (click)="openFile(impression.imageContentType, impression.image)">
+                            <img [src]="'data:' + impression.imageContentType + ';base64,' + impression.image" style="max-width: 100%;" alt="impression image"/>
+                        </a>
+                        {{impression.imageContentType}}, {{byteSize(impression.image)}}
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/impression', impression.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

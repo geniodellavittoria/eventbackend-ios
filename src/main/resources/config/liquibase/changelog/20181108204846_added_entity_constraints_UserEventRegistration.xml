@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity UserEventRegistration.
+    -->
+    <changeSet id="20181108204846-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="registration_category_id"
+                                 baseTableName="user_event_registration"
+                                 constraintName="fk_user_event_registration_registration_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="registration_category"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id_id"
+                                 baseTableName="user_event_registration"
+                                 constraintName="fk_user_event_registration_user_id_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="user_event_registration"
+                                 constraintName="fk_user_event_registration_event_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="event"/>
+
+    </changeSet>
+</databaseChangeLog>

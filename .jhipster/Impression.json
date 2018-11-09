@@ -1,0 +1,30 @@
+{
+    "name": "Impression",
+    "fields": [
+        {
+            "fieldName": "image",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "image",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "eventId",
+            "otherEntityName": "event",
+            "otherEntityRelationshipName": "impression"
+        }
+    ],
+    "changelogDate": "20181108204849",
+    "entityTableName": "impression",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

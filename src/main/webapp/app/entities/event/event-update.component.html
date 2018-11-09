@@ -1,0 +1,167 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-event-heading">Create or edit a Event</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!event.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="event.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                        [(ngModel)]="event.name" required maxlength="100"/>
+                    <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.maxlength">
+                        This field cannot be longer than 100 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <textarea class="form-control" name="description" id="field_description"
+                        [(ngModel)]="event.description" required></textarea>
+                    <div [hidden]="!(editForm.controls.description?.dirty && editForm.controls.description?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.description?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_locationLongitude">Location Longitude</label>
+                    <input type="number" class="form-control" name="locationLongitude" id="field_locationLongitude"
+                        [(ngModel)]="event.locationLongitude" required/>
+                    <div [hidden]="!(editForm.controls.locationLongitude?.dirty && editForm.controls.locationLongitude?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.locationLongitude?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.locationLongitude?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_locationLatitude">Location Latitude</label>
+                    <input type="number" class="form-control" name="locationLatitude" id="field_locationLatitude"
+                        [(ngModel)]="event.locationLatitude" required/>
+                    <div [hidden]="!(editForm.controls.locationLatitude?.dirty && editForm.controls.locationLatitude?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.locationLatitude?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.locationLatitude?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_price">Price</label>
+                    <input type="number" class="form-control" name="price" id="field_price"
+                        [(ngModel)]="event.price" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_timestamp">Timestamp</label>
+                    <div class="d-flex">
+                        <input id="field_timestamp" type="datetime-local" class="form-control" name="timestamp" [(ngModel)]="timestamp"
+                        required/>
+                    </div>
+                    <div [hidden]="!(editForm.controls.timestamp?.dirty && editForm.controls.timestamp?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.timestamp?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.timestamp?.errors?.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_eventStart">Event Start</label>
+                    <div class="d-flex">
+                        <input id="field_eventStart" type="datetime-local" class="form-control" name="eventStart" [(ngModel)]="eventStart"
+                        required/>
+                    </div>
+                    <div [hidden]="!(editForm.controls.eventStart?.dirty && editForm.controls.eventStart?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.eventStart?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.eventStart?.errors?.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_eventEnd">Event End</label>
+                    <div class="d-flex">
+                        <input id="field_eventEnd" type="datetime-local" class="form-control" name="eventEnd" [(ngModel)]="eventEnd"
+                        required/>
+                    </div>
+                    <div [hidden]="!(editForm.controls.eventEnd?.dirty && editForm.controls.eventEnd?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.eventEnd?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.eventEnd?.errors?.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_eventImage">Event Image</label>
+                    <div>
+                        <img [src]="'data:' + event.eventImageContentType + ';base64,' + event.eventImage" style="max-height: 100px;" *ngIf="event.eventImage" alt="event image"/>
+                        <div *ngIf="event.eventImage" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{event.eventImageContentType}}, {{byteSize(event.eventImage)}}</span>
+                            <button type="button" (click)="clearInputImage('eventImage', 'eventImageContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_eventImage" (change)="setFileData($event, event, 'eventImage', true)" accept="image/*"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="eventImage" id="field_eventImage"
+                        [(ngModel)]="event.eventImage" />
+                    <input type="hidden" class="form-control" name="eventImageContentType" id="field_eventImageContentType"
+                        [(ngModel)]="event.eventImageContentType" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_category">Category</label>
+                    <select class="form-control" id="field_category" name="category" [(ngModel)]="event.category" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="categoryOption.id === event.category?.id ? event.category : categoryOption" *ngFor="let categoryOption of categories; trackBy: trackCategoryById">{{categoryOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_impression">Impression</label>
+                    <select class="form-control" id="field_impression" name="impression" [(ngModel)]="event.impression" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="impressionOption.id === event.impression?.id ? event.impression : impressionOption" *ngFor="let impressionOption of impressions; trackBy: trackImpressionById">{{impressionOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
