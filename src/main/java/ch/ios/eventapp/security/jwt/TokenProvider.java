@@ -27,6 +27,7 @@ public class TokenProvider {
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String USER_ID_KEY = "user_id";
 
     private Key key;
 
@@ -60,10 +61,12 @@ public class TokenProvider {
                 .getTokenValidityInSecondsForRememberMe();
     }
 
-    public String createToken(Authentication authentication, boolean rememberMe) {
-        String authorities = authentication.getAuthorities().stream()
+    public String createToken(Authentication authentication, Long userId, boolean rememberMe) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(AUTHORITIES_KEY, authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.joining(","));
+            .collect(Collectors.joining(",")));
+        claims.put(USER_ID_KEY, userId);
 
         long now = (new Date()).getTime();
         Date validity;
@@ -75,7 +78,7 @@ public class TokenProvider {
 
         return Jwts.builder()
             .setSubject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authorities)
+            .addClaims(claims)
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
             .compact();

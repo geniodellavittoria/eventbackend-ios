@@ -1,5 +1,9 @@
 package ch.ios.eventapp.web.rest;
 
+import ch.ios.eventapp.domain.Client;
+import ch.ios.eventapp.domain.User;
+import ch.ios.eventapp.repository.ClientRepository;
+import ch.ios.eventapp.repository.UserRepository;
 import ch.ios.eventapp.security.jwt.JWTFilter;
 import ch.ios.eventapp.security.jwt.TokenProvider;
 import ch.ios.eventapp.web.rest.vm.LoginVM;
@@ -7,6 +11,9 @@ import ch.ios.eventapp.web.rest.vm.LoginVM;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 /**
  * Controller to authenticate users.
@@ -25,9 +33,14 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class UserJWTController {
 
+    private final Logger log = LoggerFactory.getLogger(UserJWTController.class);
+
     private final TokenProvider tokenProvider;
 
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public UserJWTController(TokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.tokenProvider = tokenProvider;
@@ -41,10 +54,15 @@ public class UserJWTController {
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
 
+        Optional<User> user = userRepository.findOneByLogin(loginVM.getUsername());
+        if (!user.isPresent()) {
+            log.warn("No user present for name: {}", loginVM.getUsername());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
-        String jwt = tokenProvider.createToken(authentication, rememberMe);
+        String jwt = tokenProvider.createToken(authentication, user.get().getId(), rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
