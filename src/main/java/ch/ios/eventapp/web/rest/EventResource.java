@@ -1,5 +1,6 @@
 package ch.ios.eventapp.web.rest;
 
+import ch.ios.eventapp.service.PassService;
 import com.codahale.metrics.annotation.Timed;
 import ch.ios.eventapp.domain.Event;
 import ch.ios.eventapp.repository.EventRepository;
@@ -8,6 +9,7 @@ import ch.ios.eventapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +33,12 @@ public class EventResource {
 
     private final EventRepository eventRepository;
 
-    public EventResource(EventRepository eventRepository) {
+    private final PassService passService;
+
+    @Autowired
+    public EventResource(EventRepository eventRepository, PassService passService) {
         this.eventRepository = eventRepository;
+        this.passService = passService;
     }
 
     /**
@@ -100,6 +106,16 @@ public class EventResource {
     public ResponseEntity<Event> getEvent(@PathVariable Long id) {
         log.debug("REST request to get Event : {}", id);
         Optional<Event> event = eventRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(event);
+    }
+
+    @GetMapping("events/{id}/pass")
+    @Timed
+    public ResponseEntity getPassForEvent(@PathVariable Long id) {
+        Optional<Event> event = eventRepository.findById(id);
+        if (event.isPresent()) {
+            passService.generatePass(event.get());
+        }
         return ResponseUtil.wrapOrNotFound(event);
     }
 

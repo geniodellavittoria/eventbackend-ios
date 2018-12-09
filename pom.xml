@@ -333,6 +333,16 @@
             <artifactId>spring-security-data</artifactId>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
+        <dependency>
+            <groupId>de.brendamour</groupId>
+            <artifactId>jpasskit</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>de.brendamour</groupId>
+            <artifactId>jpasskit.server</artifactId>
+            <version>0.1.0</version>
+        </dependency>-->
     </dependencies>
 
     <build>
