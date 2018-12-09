@@ -61,6 +61,10 @@ relationship OneToMany {
 }
 
 relationship OneToMany {
+    User{id} to Event
+}
+
+relationship OneToMany {
 	RegistrationCategory{userEventRegistrationId} to UserEventRegistration
 }
 
