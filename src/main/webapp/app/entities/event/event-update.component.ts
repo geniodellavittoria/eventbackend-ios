@@ -10,6 +10,7 @@ import { IEvent } from 'app/shared/model/event.model';
 import { EventService } from './event.service';
 import { ICategory } from 'app/shared/model/category.model';
 import { CategoryService } from 'app/entities/category';
+import { IUser, UserService } from 'app/core';
 import { IImpression } from 'app/shared/model/impression.model';
 import { ImpressionService } from 'app/entities/impression';
 
@@ -23,6 +24,8 @@ export class EventUpdateComponent implements OnInit {
 
     categories: ICategory[];
 
+    users: IUser[];
+
     impressions: IImpression[];
     timestamp: string;
     eventStart: string;
@@ -33,6 +36,7 @@ export class EventUpdateComponent implements OnInit {
         private jhiAlertService: JhiAlertService,
         private eventService: EventService,
         private categoryService: CategoryService,
+        private userService: UserService,
         private impressionService: ImpressionService,
         private elementRef: ElementRef,
         private activatedRoute: ActivatedRoute
@@ -49,6 +53,12 @@ export class EventUpdateComponent implements OnInit {
         this.categoryService.query().subscribe(
             (res: HttpResponse<ICategory[]>) => {
                 this.categories = res.body;
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
+        this.userService.query().subscribe(
+            (res: HttpResponse<IUser[]>) => {
+                this.users = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -110,6 +120,10 @@ export class EventUpdateComponent implements OnInit {
     }
 
     trackCategoryById(index: number, item: ICategory) {
+        return item.id;
+    }
+
+    trackUserById(index: number, item: IUser) {
         return item.id;
     }
 

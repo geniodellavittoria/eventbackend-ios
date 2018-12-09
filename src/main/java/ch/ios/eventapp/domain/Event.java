@@ -72,6 +72,10 @@ public class Event implements Serializable {
     @OneToMany(mappedBy = "event")
     private Set<UserEventRegistration> userEventRegistrationIds = new HashSet<>();
     @ManyToOne
+    @JsonIgnoreProperties("")
+    private User userId;
+
+    @ManyToOne
     @JsonIgnoreProperties("eventIds")
     private Impression impression;
 
@@ -250,6 +254,19 @@ public class Event implements Serializable {
 
     public void setUserEventRegistrationIds(Set<UserEventRegistration> userEventRegistrations) {
         this.userEventRegistrationIds = userEventRegistrations;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public Event userId(User user) {
+        this.userId = user;
+        return this;
+    }
+
+    public void setUserId(User user) {
+        this.userId = user;
     }
 
     public Impression getImpression() {

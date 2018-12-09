@@ -14,6 +14,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="category"/>
 
+        <addForeignKeyConstraint baseColumnNames="user_id_id"
+                                 baseTableName="event"
+                                 constraintName="fk_event_user_id_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
         <addForeignKeyConstraint baseColumnNames="impression_id"
                                  baseTableName="event"
                                  constraintName="fk_event_impression_id"

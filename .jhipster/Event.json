@@ -77,6 +77,12 @@
             "otherEntityRelationshipName": "event"
         },
         {
+            "relationshipType": "many-to-one",
+            "relationshipName": "userId",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        },
+        {
             "relationshipName": "impression",
             "otherEntityName": "impression",
             "relationshipType": "many-to-one",

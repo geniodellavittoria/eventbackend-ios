@@ -5,6 +5,8 @@ import { EventAppUserEventRegistrationModule } from './user-event-registration/u
 import { EventAppCategoryModule } from './category/category.module';
 import { EventAppEventModule } from './event/event.module';
 import { EventAppImpressionModule } from './impression/impression.module';
+import { EventAppClientModule } from './client/client.module';
+import { EventAppRoleModule } from './role/role.module';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -15,6 +17,8 @@ import { EventAppImpressionModule } from './impression/impression.module';
         EventAppCategoryModule,
         EventAppEventModule,
         EventAppImpressionModule,
+        EventAppClientModule,
+        EventAppRoleModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [],

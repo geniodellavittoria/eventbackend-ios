@@ -52,6 +52,10 @@
                         <a [routerLink]="['/category', event.category?.id, 'view']">{{event.category?.id}}</a>
                     </div>
                 </dd>
+                <dt><span>User Id</span></dt>
+                <dd>
+                    {{event.userId?.id}}
+                </dd>
                 <dt><span>Impression</span></dt>
                 <dd>
                     <div *ngIf="event.impression">

@@ -147,6 +147,13 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label class="form-control-label" for="field_userId">User Id</label>
+                    <select class="form-control" id="field_userId" name="userId" [(ngModel)]="event.userId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === event.userId?.id ? event.userId : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label class="form-control-label" for="field_impression">Impression</label>
                     <select class="form-control" id="field_impression" name="impression" [(ngModel)]="event.impression" >
                         <option [ngValue]="null"></option>

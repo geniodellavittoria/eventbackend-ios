@@ -56,12 +56,12 @@ relationship OneToMany {
 	Event{userEventRegistrationId} to UserEventRegistration
 }
 
-relationship OneToMany {
-	User{id} to UserEventRegistration
+relationship ManyToOne {
+	UserEventRegistration{userId} to User
 }
 
-relationship OneToMany {
-    User{id} to Event
+relationship ManyToOne {
+    Event{userId} to User
 }
 
 relationship OneToMany {

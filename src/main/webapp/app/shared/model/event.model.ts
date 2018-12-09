@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { ICategory } from 'app/shared/model//category.model';
 import { IUserEventRegistration } from 'app/shared/model//user-event-registration.model';
+import { IUser } from 'app/core/user/user.model';
 import { IImpression } from 'app/shared/model//impression.model';
 
 export interface IEvent {
@@ -17,6 +18,7 @@ export interface IEvent {
     eventImage?: any;
     category?: ICategory;
     userEventRegistrationIds?: IUserEventRegistration[];
+    userId?: IUser;
     impression?: IImpression;
 }
 
@@ -35,6 +37,7 @@ export class Event implements IEvent {
         public eventImage?: any,
         public category?: ICategory,
         public userEventRegistrationIds?: IUserEventRegistration[],
+        public userId?: IUser,
         public impression?: IImpression
     ) {}
 }
