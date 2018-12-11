@@ -1,5 +1,7 @@
 package ch.ios.eventapp.web.rest;
 
+import ch.ios.eventapp.domain.UserEventRegistration;
+import ch.ios.eventapp.repository.UserEventRegistrationRepository;
 import com.codahale.metrics.annotation.Timed;
 import ch.ios.eventapp.domain.Event;
 import ch.ios.eventapp.repository.EventRepository;
@@ -8,6 +10,8 @@ import ch.ios.eventapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +19,13 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import static java.time.Instant.now;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * REST controller for managing Event.
@@ -31,8 +40,12 @@ public class EventResource {
 
     private final EventRepository eventRepository;
 
-    public EventResource(EventRepository eventRepository) {
+    private final UserEventRegistrationRepository userEventRegistrationRepository;
+
+    @Autowired
+    public EventResource(EventRepository eventRepository, UserEventRegistrationRepository userEventRegistrationRepository) {
         this.eventRepository = eventRepository;
+        this.userEventRegistrationRepository = userEventRegistrationRepository;
     }
 
     /**
@@ -101,6 +114,24 @@ public class EventResource {
         log.debug("REST request to get Event : {}", id);
         Optional<Event> event = eventRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(event);
+    }
+    
+    @PostMapping("/events/{id}/register")
+    @Timed
+    public ResponseEntity<UserEventRegistration> registerEvent(@PathVariable Long id,
+                                                               @RequestBody UserEventRegistration eventRegistration) {
+        log.debug("Registering for Event {}", id);
+        Optional<Event> event = eventRepository.findById(id);
+        if (!event.isPresent()) {
+            return new ResponseEntity<>(BAD_REQUEST);
+        }
+        if (eventRegistration.getTimestamp() == null) {
+            eventRegistration.setTimestamp(now());
+        }
+        eventRegistration.setEvent(event.get());
+        UserEventRegistration savedEventRegistration= userEventRegistrationRepository
+            .save(eventRegistration);
+        return new ResponseEntity<>(savedEventRegistration, OK);
     }
 
     /**
