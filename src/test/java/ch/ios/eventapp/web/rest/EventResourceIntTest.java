@@ -4,8 +4,10 @@ import ch.ios.eventapp.EventApp;
 
 import ch.ios.eventapp.domain.Event;
 import ch.ios.eventapp.repository.EventRepository;
+import ch.ios.eventapp.repository.UserEventRegistrationRepository;
 import ch.ios.eventapp.web.rest.errors.ExceptionTranslator;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,6 +87,9 @@ public class EventResourceIntTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private UserEventRegistrationRepository userEventRegistrationRepository;
 
     private MockMvc restEventMockMvc;
 

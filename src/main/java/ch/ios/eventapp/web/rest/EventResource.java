@@ -1,10 +1,12 @@
 package ch.ios.eventapp.web.rest;
 
+import ch.ios.eventapp.domain.RegistrationCategory;
+import ch.ios.eventapp.domain.User;
 import ch.ios.eventapp.domain.UserEventRegistration;
-import ch.ios.eventapp.repository.UserEventRegistrationRepository;
+import ch.ios.eventapp.repository.*;
+import ch.ios.eventapp.service.dto.UserEventRegistrationDTO;
 import com.codahale.metrics.annotation.Timed;
 import ch.ios.eventapp.domain.Event;
-import ch.ios.eventapp.repository.EventRepository;
 import ch.ios.eventapp.web.rest.errors.BadRequestAlertException;
 import ch.ios.eventapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -41,6 +43,12 @@ public class EventResource {
     private final EventRepository eventRepository;
 
     private final UserEventRegistrationRepository userEventRegistrationRepository;
+
+    @Autowired
+    private RegistrationCategoryRepository registrationCategoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public EventResource(EventRepository eventRepository, UserEventRegistrationRepository userEventRegistrationRepository) {
@@ -115,22 +123,33 @@ public class EventResource {
         Optional<Event> event = eventRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(event);
     }
-    
+
     @PostMapping("/events/{id}/register")
     @Timed
     public ResponseEntity<UserEventRegistration> registerEvent(@PathVariable Long id,
-                                                               @RequestBody UserEventRegistration eventRegistration) {
+                                                               @RequestBody UserEventRegistrationDTO eventRegistration) {
         log.debug("Registering for Event {}", id);
+
+        UserEventRegistration userEventRegistration = new UserEventRegistration();
+        Optional<RegistrationCategory> registrationCategory = registrationCategoryRepository
+            .findById(eventRegistration.getEventRegistrationId());
         Optional<Event> event = eventRepository.findById(id);
-        if (!event.isPresent()) {
+        Optional<User> user = userRepository.findById(eventRegistration.getUserId());
+
+        if (!event.isPresent() || !user.isPresent() || !registrationCategory.isPresent()) {
             return new ResponseEntity<>(BAD_REQUEST);
         }
+        userEventRegistration.setUserId(user.get());
+        userEventRegistration.setRegistrationCategory(registrationCategory.get());
+        userEventRegistration.setEvent(event.get());
+
         if (eventRegistration.getTimestamp() == null) {
-            eventRegistration.setTimestamp(now());
+            userEventRegistration.setTimestamp(now());
+        } else {
+            userEventRegistration.setTimestamp(eventRegistration.getTimestamp());
         }
-        eventRegistration.setEvent(event.get());
         UserEventRegistration savedEventRegistration= userEventRegistrationRepository
-            .save(eventRegistration);
+            .save(userEventRegistration);
         return new ResponseEntity<>(savedEventRegistration, OK);
     }
 
