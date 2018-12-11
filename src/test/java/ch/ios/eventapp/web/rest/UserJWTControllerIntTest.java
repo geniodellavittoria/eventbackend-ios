@@ -7,6 +7,7 @@ import ch.ios.eventapp.security.jwt.TokenProvider;
 import ch.ios.eventapp.web.rest.errors.ExceptionTranslator;
 import ch.ios.eventapp.web.rest.vm.LoginVM;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import static org.hamcrest.Matchers.not;
  *
  * @see UserJWTController
  */
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EventApp.class)
 public class UserJWTControllerIntTest {

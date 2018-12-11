@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing UserEventRegistration.
@@ -77,16 +78,24 @@ public class UserEventRegistrationResource {
             .body(result);
     }
 
-    /**
-     * GET  /user-event-registrations : get all the userEventRegistrations.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of userEventRegistrations in body
-     */
-    @GetMapping("/user-event-registrations")
+    @GetMapping("registrations")
     @Timed
-    public List<UserEventRegistration> getAllUserEventRegistrations() {
-        log.debug("REST request to get all UserEventRegistrations");
-        return userEventRegistrationRepository.findAll();
+    public List<UserEventRegistration> getEventRegistrations() {
+        return userEventRegistrationRepository.findByUserIdIsCurrentUser();
+    }
+
+    @GetMapping("registrations/tagging")
+    @Timed
+    public List<UserEventRegistration> getTaggingEventRegistrations() {
+        List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findByUserIdIsCurrentUser();
+        return eventRegistrations.stream().filter(e -> e.getRegistrationCategory().getId() == 2).collect(Collectors.toList());
+    }
+
+    @GetMapping("registrations/registration")
+    @Timed
+    public List<UserEventRegistration> getRegisterEventRegistrations() {
+        List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findByUserIdIsCurrentUser();
+        return eventRegistrations.stream().filter(e -> e.getRegistrationCategory().getId() == 1).collect(Collectors.toList());
     }
 
     /**
