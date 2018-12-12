@@ -16,4 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select event from Event event where event.userId.login = ?#{principal.username}")
     List<Event> findByUserIdIsCurrentUser();
 
+    //@Query("delete from Event e where e.userId.login = ?#{principal.username} and e.id = ?1")
+    //void deleteByFindByCurrentUserAndId(Long id);
+
 }

@@ -10,6 +10,7 @@ import ch.ios.eventapp.domain.Event;
 import ch.ios.eventapp.web.rest.errors.BadRequestAlertException;
 import ch.ios.eventapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.checkerframework.checker.units.qual.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +152,17 @@ public class EventResource {
         UserEventRegistration savedEventRegistration= userEventRegistrationRepository
             .save(userEventRegistration);
         return new ResponseEntity<>(savedEventRegistration, OK);
+    }
+
+    @DeleteMapping("/events/{id}/unregister")
+    @Timed
+    public ResponseEntity<Void> unregisterEvent(@PathVariable Long id) {
+        log.debug("Unregister for Event id");
+        List<UserEventRegistration> events = userEventRegistrationRepository.findByUserIdIsCurrentUser();
+        events.stream().filter(e -> e.getEvent().getId().equals(id))
+            .findAny()
+            .ifPresent(userEventRegistrationRepository::delete);
+        return new ResponseEntity<>(OK);
     }
 
     /**
