@@ -10,6 +10,8 @@ public class UserEventRegistrationDTO {
 
     private Instant timestamp;
 
+    private Long eventId;
+
     public Long getUserId() {
         return userId;
     }
@@ -32,5 +34,13 @@ public class UserEventRegistrationDTO {
 
     public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 }

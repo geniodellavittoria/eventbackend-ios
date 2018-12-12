@@ -1,5 +1,6 @@
 package ch.ios.eventapp.web.rest;
 
+import ch.ios.eventapp.service.dto.UserEventRegistrationDTO;
 import com.codahale.metrics.annotation.Timed;
 import ch.ios.eventapp.domain.UserEventRegistration;
 import ch.ios.eventapp.repository.UserEventRegistrationRepository;
@@ -17,7 +18,8 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * REST controller for managing UserEventRegistration.
@@ -98,16 +100,36 @@ public class UserEventRegistrationResource {
 
     @GetMapping("registrations/tagging")
     @Timed
-    public List<UserEventRegistration> getTaggingEventRegistrations() {
+    public List<UserEventRegistrationDTO> getTaggingEventRegistrations() {
         List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findByUserIdIsCurrentUser();
-        return eventRegistrations.stream().filter(e -> e.getRegistrationCategory().getId() == 2).collect(Collectors.toList());
+        List<UserEventRegistrationDTO> userEventRegistrationDTOS = eventRegistrations.stream()
+            .filter(e -> e.getRegistrationCategory().getId() == 2)
+            .map(e -> {
+                UserEventRegistrationDTO u = new UserEventRegistrationDTO();
+                u.setTimestamp(e.getTimestamp());
+                u.setEventRegistrationId(e.getRegistrationCategory().getId());
+                u.setEventId(e.getEvent().getId());
+                u.setUserId(e.getUserId().getId());
+                return u;
+            }).collect(toList());
+        return userEventRegistrationDTOS;
     }
 
     @GetMapping("registrations/registration")
     @Timed
-    public List<UserEventRegistration> getRegisterEventRegistrations() {
+    public List<UserEventRegistrationDTO> getRegisterEventRegistrations() {
         List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findByUserIdIsCurrentUser();
-        return eventRegistrations.stream().filter(e -> e.getRegistrationCategory().getId() == 1).collect(Collectors.toList());
+        List<UserEventRegistrationDTO> userEventRegistrationDTOS = eventRegistrations.stream()
+            .filter(e -> e.getRegistrationCategory().getId() == 1)
+            .map(e -> {
+                UserEventRegistrationDTO u = new UserEventRegistrationDTO();
+                u.setTimestamp(e.getTimestamp());
+                u.setEventRegistrationId(e.getRegistrationCategory().getId());
+                u.setEventId(e.getEvent().getId());
+                u.setUserId(e.getUserId().getId());
+                return u;
+            }).collect(toList());
+        return userEventRegistrationDTOS;
     }
 
     /**
