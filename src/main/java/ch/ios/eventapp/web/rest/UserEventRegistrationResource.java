@@ -78,6 +78,18 @@ public class UserEventRegistrationResource {
             .body(result);
     }
 
+    /**
+     * GET  /user-event-registrations : get all the userEventRegistrations.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of userEventRegistrations in body
+     */
+    @GetMapping("/user-event-registrations")
+    @Timed
+    public List<UserEventRegistration> getAllUserEventRegistrations() {
+        log.debug("REST request to get all UserEventRegistrations");
+        return userEventRegistrationRepository.findAll();
+    }
+
     @GetMapping("registrations")
     @Timed
     public List<UserEventRegistration> getEventRegistrations() {
