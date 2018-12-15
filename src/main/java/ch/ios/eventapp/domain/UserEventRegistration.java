@@ -37,8 +37,7 @@ public class UserEventRegistration implements Serializable {
     @JsonIgnoreProperties("")
     private User userId;
 
-
-    @JoinColumn(name = "eventId")
+    @ManyToOne(fetch = LAZY)
     @JsonIgnoreProperties("userEventRegistrationIds")
     private Event event;
 
