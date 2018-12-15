@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import static javax.persistence.FetchType.LAZY;
+
 /**
  * A UserEventRegistration.
  */
@@ -30,11 +32,13 @@ public class UserEventRegistration implements Serializable {
     @JsonIgnoreProperties("userEventRegistrationIds")
     private RegistrationCategory registrationCategory;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
+    //@JoinColumn(name = "id")
     @JsonIgnoreProperties("")
     private User userId;
 
-    @ManyToOne
+
+    @JoinColumn(name = "eventId")
     @JsonIgnoreProperties("userEventRegistrationIds")
     private Event event;
 

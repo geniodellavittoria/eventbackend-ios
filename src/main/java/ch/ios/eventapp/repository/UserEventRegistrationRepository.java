@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Spring Data  repository for the UserEventRegistration entity.
@@ -16,4 +17,5 @@ public interface UserEventRegistrationRepository extends JpaRepository<UserEvent
     @Query("select user_event_registration from UserEventRegistration user_event_registration where user_event_registration.userId.login = ?#{principal.username}")
     List<UserEventRegistration> findByUserIdIsCurrentUser();
 
+    Optional<UserEventRegistration> findAllByEventId(Long id);
 }

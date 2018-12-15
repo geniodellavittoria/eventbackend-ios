@@ -1,6 +1,6 @@
 package ch.ios.eventapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import ch.ios.eventapp.service.dto.EventForm;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -11,6 +11,8 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
+
+import static javax.persistence.FetchType.EAGER;
 
 /**
  * A Event.
@@ -30,7 +32,6 @@ public class Event implements Serializable {
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
@@ -69,8 +70,9 @@ public class Event implements Serializable {
     @JsonIgnoreProperties("ids")
     private Category category;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch = EAGER)
     private Set<UserEventRegistration> userEventRegistrationIds = new HashSet<>();
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private User userId;
@@ -78,6 +80,46 @@ public class Event implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties("eventIds")
     private Impression impression;
+
+
+    public static EventForm mapToEventForm(Event event) {
+        EventForm eventForm = new EventForm();
+        eventForm.setId(event.id);
+        eventForm.setCategory(event.category);
+        eventForm.setImpression(event.impression);
+        eventForm.setEventEnd(event.eventEnd);
+        eventForm.setEventStart(event.eventStart);
+        eventForm.setLocationLatitude(event.locationLatitude);
+        eventForm.setLocationLongitude(event.locationLongitude);
+        eventForm.setName(event.name);
+        eventForm.setPrice(event.price);
+        eventForm.setTimestamp(event.timestamp);
+        eventForm.setDescription(event.description);
+        eventForm.setEventRegistrations(event.userEventRegistrationIds);
+        if (event.userId != null) {
+            eventForm.setUserId(event.userId.getId());
+        }
+        return eventForm;
+    }
+
+    public static Event mapToEvent(EventForm eventForm) {
+        Event event = new Event();
+        event.id = eventForm.getId();
+        event.category = eventForm.getCategory();
+        event.description = eventForm.getDescription();
+        event.eventImage = eventForm.getEventImage();
+        event.eventEnd = eventForm.getEventEnd();
+        event.eventStart = eventForm.getEventStart();
+        event.eventImageContentType = eventForm.getEventImageContentType();
+        event.impression = eventForm.getImpression();
+        event.locationLatitude = eventForm.getLocationLatitude();
+        event.locationLongitude = eventForm.getLocationLongitude();
+        event.name = eventForm.getName();
+        event.price = eventForm.getPrice();
+        event.timestamp = eventForm.getTimestamp();
+        event.userEventRegistrationIds = eventForm.getEventRegistrations();
+        return event;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {

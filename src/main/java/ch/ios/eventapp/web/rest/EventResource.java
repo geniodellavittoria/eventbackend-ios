@@ -4,17 +4,16 @@ import ch.ios.eventapp.domain.RegistrationCategory;
 import ch.ios.eventapp.domain.User;
 import ch.ios.eventapp.domain.UserEventRegistration;
 import ch.ios.eventapp.repository.*;
+import ch.ios.eventapp.service.dto.EventForm;
 import ch.ios.eventapp.service.dto.UserEventRegistrationDTO;
 import com.codahale.metrics.annotation.Timed;
 import ch.ios.eventapp.domain.Event;
 import ch.ios.eventapp.web.rest.errors.BadRequestAlertException;
 import ch.ios.eventapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.checkerframework.checker.units.qual.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +21,11 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static ch.ios.eventapp.domain.Event.mapToEvent;
 import static java.time.Instant.now;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -71,6 +71,7 @@ public class EventResource {
         if (event.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
         Event result = eventRepository.save(event);
         return ResponseEntity.created(new URI("/api/events/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -99,6 +100,25 @@ public class EventResource {
             .body(result);
     }
 
+    @PutMapping("/event")
+    @Timed
+    public ResponseEntity<Event> updateEventForm(@Valid @RequestBody EventForm event) throws URISyntaxException {
+        log.debug("REST request to update Event : {}", event);
+        if (event.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        Optional<User> user = userRepository.findById(event.getUserId());
+        if (!user.isPresent()) {
+            return new ResponseEntity<>(BAD_REQUEST);
+        }
+        Event eventModel = mapToEvent(event);
+        eventModel.userId(user.get());
+        Event result = eventRepository.save(eventModel);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, event.getId().toString()))
+            .body(result);
+    }
+
     /**
      * GET  /events : get all the events.
      *
@@ -106,9 +126,17 @@ public class EventResource {
      */
     @GetMapping("/events")
     @Timed
-    public List<Event> getAllEvents() {
+    public List<EventForm> getAllEvents() {
         log.debug("REST request to get all Events");
-        return eventRepository.findAll();
+        List<Event> events = eventRepository.findAll();
+        List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findAll();
+        List<EventForm> eventForms =  events.stream().map(Event::mapToEventForm).collect(Collectors.toList());
+
+        /*eventForms.stream().map(e -> {
+            Optional<UserEventRegistration> userEventRegistration = userEventRegistrationRepository.findAllByEventId(e.getId());
+
+        })*/
+        return eventForms;
     }
 
     /**
