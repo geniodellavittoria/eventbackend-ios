@@ -4,6 +4,8 @@ import java.time.Instant;
 
 public class UserEventRegistrationDTO {
 
+    private Long id;
+
     private Long userId;
 
     private Long eventRegistrationId;
@@ -11,6 +13,8 @@ public class UserEventRegistrationDTO {
     private Instant timestamp;
 
     private Long eventId;
+
+    private int place;
 
     public Long getUserId() {
         return userId;
@@ -42,5 +46,21 @@ public class UserEventRegistrationDTO {
 
     public void setEventId(Long eventId) {
         this.eventId = eventId;
+    }
+
+    public int getPlace() {
+        return place;
+    }
+
+    public void setPlace(int place) {
+        this.place = place;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

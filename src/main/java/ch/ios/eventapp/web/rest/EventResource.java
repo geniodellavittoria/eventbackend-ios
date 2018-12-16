@@ -4,6 +4,7 @@ import ch.ios.eventapp.domain.RegistrationCategory;
 import ch.ios.eventapp.domain.User;
 import ch.ios.eventapp.domain.UserEventRegistration;
 import ch.ios.eventapp.repository.*;
+import ch.ios.eventapp.service.EventMapperService;
 import ch.ios.eventapp.service.dto.EventForm;
 import ch.ios.eventapp.service.dto.UserEventRegistrationDTO;
 import com.codahale.metrics.annotation.Timed;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ch.ios.eventapp.domain.Event.mapToEvent;
+import static ch.ios.eventapp.service.EventMapperService.mapToUserEventRegistrationDTO;
 import static java.time.Instant.now;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -50,6 +51,9 @@ public class EventResource {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EventMapperService eventMapperService;
 
     @Autowired
     public EventResource(EventRepository eventRepository, UserEventRegistrationRepository userEventRegistrationRepository) {
@@ -111,7 +115,7 @@ public class EventResource {
         if (!user.isPresent()) {
             return new ResponseEntity<>(BAD_REQUEST);
         }
-        Event eventModel = mapToEvent(event);
+        Event eventModel = eventMapperService.mapToEvent(event);
         eventModel.userId(user.get());
         Event result = eventRepository.save(eventModel);
         return ResponseEntity.ok()
@@ -130,7 +134,7 @@ public class EventResource {
         log.debug("REST request to get all Events");
         List<Event> events = eventRepository.findAll();
         List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findAll();
-        List<EventForm> eventForms =  events.stream().map(Event::mapToEventForm).collect(Collectors.toList());
+        List<EventForm> eventForms =  events.stream().map(EventMapperService::mapToEventForm).collect(Collectors.toList());
 
         /*eventForms.stream().map(e -> {
             Optional<UserEventRegistration> userEventRegistration = userEventRegistrationRepository.findAllByEventId(e.getId());
@@ -155,7 +159,7 @@ public class EventResource {
 
     @PostMapping("/events/{id}/register")
     @Timed
-    public ResponseEntity<UserEventRegistration> registerEvent(@PathVariable Long id,
+    public ResponseEntity<UserEventRegistrationDTO> registerEvent(@PathVariable Long id,
                                                                @RequestBody UserEventRegistrationDTO eventRegistration) {
         log.debug("Registering for Event {}", id);
 
@@ -179,7 +183,7 @@ public class EventResource {
         }
         UserEventRegistration savedEventRegistration= userEventRegistrationRepository
             .save(userEventRegistration);
-        return new ResponseEntity<>(savedEventRegistration, OK);
+        return new ResponseEntity<>(mapToUserEventRegistrationDTO(savedEventRegistration), OK);
     }
 
     @DeleteMapping("/events/{id}/unregister")

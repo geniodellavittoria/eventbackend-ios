@@ -81,46 +81,6 @@ public class Event implements Serializable {
     @JsonIgnoreProperties("eventIds")
     private Impression impression;
 
-
-    public static EventForm mapToEventForm(Event event) {
-        EventForm eventForm = new EventForm();
-        eventForm.setId(event.id);
-        eventForm.setCategory(event.category);
-        eventForm.setImpression(event.impression);
-        eventForm.setEventEnd(event.eventEnd);
-        eventForm.setEventStart(event.eventStart);
-        eventForm.setLocationLatitude(event.locationLatitude);
-        eventForm.setLocationLongitude(event.locationLongitude);
-        eventForm.setName(event.name);
-        eventForm.setPrice(event.price);
-        eventForm.setTimestamp(event.timestamp);
-        eventForm.setDescription(event.description);
-        eventForm.setEventRegistrations(event.userEventRegistrationIds);
-        if (event.userId != null) {
-            eventForm.setUserId(event.userId.getId());
-        }
-        return eventForm;
-    }
-
-    public static Event mapToEvent(EventForm eventForm) {
-        Event event = new Event();
-        event.id = eventForm.getId();
-        event.category = eventForm.getCategory();
-        event.description = eventForm.getDescription();
-        event.eventImage = eventForm.getEventImage();
-        event.eventEnd = eventForm.getEventEnd();
-        event.eventStart = eventForm.getEventStart();
-        event.eventImageContentType = eventForm.getEventImageContentType();
-        event.impression = eventForm.getImpression();
-        event.locationLatitude = eventForm.getLocationLatitude();
-        event.locationLongitude = eventForm.getLocationLongitude();
-        event.name = eventForm.getName();
-        event.price = eventForm.getPrice();
-        event.timestamp = eventForm.getTimestamp();
-        event.userEventRegistrationIds = eventForm.getEventRegistrations();
-        return event;
-    }
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;

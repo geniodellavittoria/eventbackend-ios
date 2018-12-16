@@ -59,7 +59,7 @@ public class EventForm {
 
     private Impression impression;
 
-    private Set<UserEventRegistration> eventRegistrations = new HashSet<>();
+    private Set<UserEventRegistrationDTO> eventRegistrations = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -173,11 +173,11 @@ public class EventForm {
         this.impression = impression;
     }
 
-    public Set<UserEventRegistration> getEventRegistrations() {
+    public Set<UserEventRegistrationDTO> getEventRegistrations() {
         return eventRegistrations;
     }
 
-    public void setEventRegistrations(Set<UserEventRegistration> eventRegistrations) {
+    public void setEventRegistrations(Set<UserEventRegistrationDTO> eventRegistrations) {
         this.eventRegistrations = eventRegistrations;
     }
 }

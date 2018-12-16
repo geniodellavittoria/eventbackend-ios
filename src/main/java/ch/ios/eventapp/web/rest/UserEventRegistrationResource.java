@@ -1,5 +1,6 @@
 package ch.ios.eventapp.web.rest;
 
+import ch.ios.eventapp.service.EventMapperService;
 import ch.ios.eventapp.service.dto.UserEventRegistrationDTO;
 import com.codahale.metrics.annotation.Timed;
 import ch.ios.eventapp.domain.UserEventRegistration;
@@ -7,8 +8,11 @@ import ch.ios.eventapp.repository.UserEventRegistrationRepository;
 import ch.ios.eventapp.web.rest.errors.BadRequestAlertException;
 import ch.ios.eventapp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.checkerframework.checker.units.qual.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +23,9 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import static ch.ios.eventapp.service.EventMapperService.mapToUserEventRegistrationDTO;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * REST controller for managing UserEventRegistration.
@@ -33,6 +39,9 @@ public class UserEventRegistrationResource {
     private static final String ENTITY_NAME = "userEventRegistration";
 
     private final UserEventRegistrationRepository userEventRegistrationRepository;
+
+    @Autowired
+    private EventMapperService eventMapperService;
 
     public UserEventRegistrationResource(UserEventRegistrationRepository userEventRegistrationRepository) {
         this.userEventRegistrationRepository = userEventRegistrationRepository;
@@ -58,6 +67,22 @@ public class UserEventRegistrationResource {
             .body(result);
     }
 
+    @PostMapping("/eventRegistration")
+    @Timed
+    public ResponseEntity<UserEventRegistrationDTO> createEventRegistration(@Valid @RequestBody UserEventRegistrationDTO eventRegistrationDTO) throws URISyntaxException {
+        if (eventRegistrationDTO.getId() != null) {
+            throw new BadRequestAlertException("A new userEventRegistration cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Optional<UserEventRegistration> eventRegistration = eventMapperService.mapToUserEventRegistration(eventRegistrationDTO);
+        if (!eventRegistration.isPresent()) {
+            return new ResponseEntity<>(BAD_REQUEST);
+        }
+        UserEventRegistration result = userEventRegistrationRepository.save(eventRegistration.get());
+        return ResponseEntity.created(new URI("/api/eventRegistration/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(mapToUserEventRegistrationDTO(result));
+    }
+
     /**
      * PUT  /user-event-registrations : Updates an existing userEventRegistration.
      *
@@ -74,10 +99,28 @@ public class UserEventRegistrationResource {
         if (userEventRegistration.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
         UserEventRegistration result = userEventRegistrationRepository.save(userEventRegistration);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, userEventRegistration.getId().toString()))
             .body(result);
+    }
+
+    @PutMapping("/eventRegistration")
+    @Timed
+    public ResponseEntity<UserEventRegistrationDTO> updateEventRegistration(@Valid @RequestBody UserEventRegistrationDTO eventRegistrationDTO) {
+        if (eventRegistrationDTO.getId() == null) {
+            throw  new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        Optional<UserEventRegistration> userEventRegistration = eventMapperService.mapToUserEventRegistration(eventRegistrationDTO);
+        if (!userEventRegistration.isPresent()) {
+            return new ResponseEntity<>(BAD_REQUEST);
+        }
+        UserEventRegistration result = userEventRegistrationRepository
+            .save(userEventRegistration.get());
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, userEventRegistration.get().getId().toString()))
+            .body(mapToUserEventRegistrationDTO(result));
     }
 
     /**
