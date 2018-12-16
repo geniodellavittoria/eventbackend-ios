@@ -134,12 +134,8 @@ public class EventResource {
         log.debug("REST request to get all Events");
         List<Event> events = eventRepository.findAll();
         List<UserEventRegistration> eventRegistrations = userEventRegistrationRepository.findAll();
-        List<EventForm> eventForms =  events.stream().map(EventMapperService::mapToEventForm).collect(Collectors.toList());
+        List<EventForm> eventForms =  events.stream().map(eventMapperService::mapToEventForm).collect(Collectors.toList());
 
-        /*eventForms.stream().map(e -> {
-            Optional<UserEventRegistration> userEventRegistration = userEventRegistrationRepository.findAllByEventId(e.getId());
-
-        })*/
         return eventForms;
     }
 

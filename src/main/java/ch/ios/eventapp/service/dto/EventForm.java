@@ -41,7 +41,6 @@ public class EventForm {
     private Float price;
 
     @NotNull
-    @Column(name = "jhi_timestamp", nullable = false)
     private Instant timestamp;
 
     @NotNull
@@ -58,6 +57,10 @@ public class EventForm {
     private Long userId;
 
     private Impression impression;
+
+    private Integer  place;
+
+    private Integer freePlace;
 
     private Set<UserEventRegistrationDTO> eventRegistrations = new HashSet<>();
 
@@ -171,6 +174,22 @@ public class EventForm {
 
     public void setImpression(Impression impression) {
         this.impression = impression;
+    }
+
+    public Integer getPlace() {
+        return place;
+    }
+
+    public void setPlace(Integer place) {
+        this.place = place;
+    }
+
+    public Integer getFreePlace() {
+        return freePlace;
+    }
+
+    public void setFreePlace(Integer freePlace) {
+        this.freePlace = freePlace;
     }
 
     public Set<UserEventRegistrationDTO> getEventRegistrations() {

@@ -40,7 +40,12 @@ public class EventMapperService {
     @Autowired
     private RegistrationCategoryRepository registrationCategoryRepository;
 
-    public static EventForm mapToEventForm(Event event) {
+    public EventForm mapToEventForm(Event event) {
+        Optional<String> loginName = getCurrentUserLogin();
+        if (!loginName.isPresent()) {
+            return null;
+        }
+
         EventForm eventForm = new EventForm();
         eventForm.setId(event.getId());
         eventForm.setCategory(event.getCategory());
@@ -55,9 +60,23 @@ public class EventMapperService {
         eventForm.setPrice(event.getPrice());
         eventForm.setTimestamp(event.getTimestamp());
         eventForm.setDescription(event.getDescription());
+        eventForm.setPlace(event.getPlace());
 
         Set<UserEventRegistrationDTO> eventRegistrations = event.getUserEventRegistrationIds().stream()
             .map(EventMapperService::mapToUserEventRegistrationDTO).collect(Collectors.toSet());
+
+        if (event.getPlace() >= 0) {
+            int freePlace = eventRegistrations.stream().mapToInt(e -> {
+                if (e.getPlace() == null) {
+                    return 1;
+                } else {
+                    return e.getPlace();
+                }
+            }).sum();
+            eventForm.setFreePlace(event.getPlace() - freePlace);
+        } else {
+            eventForm.setFreePlace(null);
+        }
         eventForm.setEventRegistrations(eventRegistrations);
         if (event.getUserId() != null) {
             eventForm.setUserId(event.getUserId().getId());
@@ -80,6 +99,7 @@ public class EventMapperService {
         event.setName(eventForm.getName());
         event.setPrice(eventForm.getPrice());
         event.setTimestamp(eventForm.getTimestamp());
+        event.setPlace(eventForm.getPlace());
 
         Set<UserEventRegistration> eventRegistrations = eventForm.getEventRegistrations().stream()
             .map(this::mapToUserEventRegistration)

@@ -57,7 +57,7 @@ relationship OneToMany {
 }
 
 relationship ManyToOne {
-	UserEventRegistration{userId} to User
+	UserEventRegistration{userEventRegistrationId} to User
 }
 
 relationship ManyToOne {

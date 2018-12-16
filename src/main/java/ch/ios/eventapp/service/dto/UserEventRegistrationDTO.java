@@ -14,7 +14,7 @@ public class UserEventRegistrationDTO {
 
     private Long eventId;
 
-    private int place;
+    private Integer place;
 
     public Long getUserId() {
         return userId;
@@ -48,11 +48,11 @@ public class UserEventRegistrationDTO {
         this.eventId = eventId;
     }
 
-    public int getPlace() {
+    public Integer getPlace() {
         return place;
     }
 
-    public void setPlace(int place) {
+    public void setPlace(Integer place) {
         this.place = place;
     }
 

@@ -81,6 +81,9 @@ public class Event implements Serializable {
     @JsonIgnoreProperties("eventIds")
     private Impression impression;
 
+    @Column(name = "place")
+    private Integer place;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -283,6 +286,15 @@ public class Event implements Serializable {
     public void setImpression(Impression impression) {
         this.impression = impression;
     }
+
+    public Integer getPlace() {
+        return place;
+    }
+
+    public void setPlace(Integer place) {
+        this.place = place;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
